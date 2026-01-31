@@ -155,14 +155,17 @@
   })();
   </script>
 
-  <!-- ✅ Your MP3 URL -->
-  <audio id="bgm" src="/bgmusic/bgmusic.mp3" loop preload="auto"></audio>
+  <!-- ✅ One-time welcome track (no loop) -->
+  <audio id="bgm" src="https://limkimsze-maker.github.io/bgmusic/bgmusic.mp3" preload="none"></audio>
 
   <script>
   (function(){
+    // Keep your existing toggle UI, but music only plays ONCE per website entry.
+    // If user turns it off, we will not play at all.
     const BGM_KEY = "SQ-bgm-on";
+    const PLAYONCE_KEY = "SQ-bgm-played-once";
     const btn = document.getElementById("bgmBtn");
-    const bgm = document.getElementById("bgm"); // ✅ FIXED (was bgmAudio)
+    const bgm = document.getElementById("bgm");
     if(!btn || !bgm) return;
 
     let on = true;
@@ -173,25 +176,14 @@
       btn.style.opacity = on ? "1" : ".75";
     }
 
-    function applyPlayState(fromGesture){
-      paint();
-      if(!on){ try{ bgm.pause(); }catch(e){} return; }
-
-      bgm.volume = 0.22;
-
-      // If not from a gesture, many browsers block. We'll still try quietly.
-      try{
-        const p = bgm.play();
-        if(p && p.catch) p.catch(()=>{});
-      }catch(e){}
-    }
-
     function setOn(v){
       on = !!v;
       try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
-      applyPlayState(true);
+      paint();
+      if(!on){ try{ bgm.pause(); }catch(e){} }
     }
 
+    // Toggle
     btn.addEventListener("click", ()=> setOn(!on));
     btn.addEventListener("keydown", (e)=>{
       if(e.key==="Enter" || e.key===" "){
@@ -200,18 +192,39 @@
       }
     });
 
-    // ✅ First user gesture unlock (important for autoplay policy)
-    window.addEventListener("pointerdown", ()=> applyPlayState(true), { once:true, passive:true });
+    // Try to play once. Most browsers require a gesture, so we start on first pointerdown.
+    function playOnce(){
+      if(!on) return;
 
-    // ✅ Sync across tabs/pages
+      // Play only once per "website entry" (session/tab).
+      // Use sessionStorage so it resets when the user closes the tab/browser.
+      try{
+        if(sessionStorage.getItem(PLAYONCE_KEY) === "1") return;
+        sessionStorage.setItem(PLAYONCE_KEY, "1");
+      }catch(e){}
+
+      bgm.currentTime = 0;
+      bgm.volume = 0.22;
+
+      try{
+        const p = bgm.play();
+        if(p && p.catch) p.catch(()=>{});
+      }catch(e){}
+    }
+
+    // One-time start on first interaction
+    window.addEventListener("pointerdown", playOnce, { once:true, passive:true });
+
+    // Keep UI in sync if another page changes it
     window.addEventListener("storage", (e)=>{
       if(e.key===BGM_KEY){
         on = (e.newValue !== "0");
-        applyPlayState(false);
+        paint();
+        if(!on){ try{ bgm.pause(); }catch(e2){} }
       }
     }, { passive:true });
 
-    applyPlayState(false);
+    paint();
   })();
   </script>
 
