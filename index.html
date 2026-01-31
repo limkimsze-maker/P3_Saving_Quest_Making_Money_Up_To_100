@@ -157,7 +157,108 @@
   </script>
 
   <!-- ✅ audio element id is "bgm" -->
-  <audio id="bgm" src="bgmusic.mp3" loop preload="auto"></audio>
+<script>
+(function(){
+  const BGM_KEY = "SQ-bgm-on";
+  const btn = document.getElementById("bgmBtn");
+  const bgm = document.getElementById("bgm");
+  if(!btn || !bgm) return;
+
+  // Show quick status (helps you catch 404 / blocked autoplay instantly)
+  const status = document.createElement("div");
+  status.style.marginTop = "6px";
+  status.style.fontSize = "12px";
+  status.style.fontWeight = "800";
+  status.style.color = "rgba(100,116,139,.95)";
+  status.id = "bgmStatus";
+  btn.insertAdjacentElement("afterend", status);
+
+  let on = true;
+  try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
+
+  function paint(){
+    btn.textContent = on ? "🎵 Music: On" : "🔇 Music: Off";
+    btn.style.opacity = on ? "1" : ".75";
+  }
+
+  function setStatus(t){ status.textContent = t; }
+
+  bgm.addEventListener("canplay", ()=> setStatus("Music ready ✅"));
+  bgm.addEventListener("playing", ()=> setStatus("Playing 🎶"));
+  bgm.addEventListener("pause", ()=> setStatus(on ? "Paused (click once to start)" : "Off"));
+  bgm.addEventListener("error", ()=>{
+    // If this shows, it’s almost always filename/path/case
+    setStatus("❌ Cannot load bgmusic.mp3 (check folder + case)");
+    // console.log("Audio src:", bgm.currentSrc || bgm.src);
+  });
+
+  async function tryPlay(fromGesture){
+    paint();
+    if(!on){
+      try{ bgm.pause(); }catch(e){}
+      setStatus("Off");
+      return;
+    }
+
+    // Gentle volume
+    bgm.volume = 0.22;
+
+    // Autoplay trick: attempt muted autoplay first (often allowed),
+    // then unmute on the user gesture.
+    try{
+      if(!fromGesture){
+        bgm.muted = true;
+        await bgm.play();
+        setStatus("Muted autoplay started (tap once to hear)");
+        return;
+      }
+      // On real user gesture:
+      bgm.muted = false;
+      await bgm.play();
+    }catch(e){
+      // Still blocked or file missing
+      setStatus("⚠️ Tap anywhere to start music (or file not found)");
+    }
+  }
+
+  function setOn(v){
+    on = !!v;
+    try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
+    // If turning ON, we still need a gesture to hear it
+    tryPlay(false);
+  }
+
+  // Toggle button
+  btn.addEventListener("click", ()=> setOn(!on));
+  btn.addEventListener("keydown", (e)=>{
+    if(e.key==="Enter" || e.key===" "){
+      e.preventDefault();
+      setOn(!on);
+    }
+  });
+
+  // First user gesture (guaranteed attempt to play with sound)
+  function onFirstGesture(){
+    tryPlay(true);
+    window.removeEventListener("pointerdown", onFirstGesture, true);
+    window.removeEventListener("keydown", onFirstGesture, true);
+  }
+  window.addEventListener("pointerdown", onFirstGesture, true);
+  window.addEventListener("keydown", onFirstGesture, true);
+
+  // Sync across pages/tabs
+  window.addEventListener("storage", (e)=>{
+    if(e.key===BGM_KEY){
+      on = (e.newValue !== "0");
+      tryPlay(false);
+    }
+  }, { passive:true });
+
+  // Kick off
+  tryPlay(false);
+})();
+</script>
+
 
   <script>
   (function(){
