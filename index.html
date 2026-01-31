@@ -46,11 +46,7 @@
 <body>
   <div class="wrap">
     <div class="top">
-      <h1>Savings Quest</h1>
-      <div class="meta">🔥 Streak (shared): <span id="streakVal">0</span></div>
-      <div class="meta" id="bgmBtn" role="button" tabindex="0" style="cursor:pointer">🎵 Music: On</div>
-      <div class="sub">Pick an item to buy. Beat the target time to build a <b>Speed Streak</b> and try again to build your streak.</div>
-      <div class="fine">Music by Chris via Pixabay</div>
+    <div class="sub">Pick an item to buy.</div>
     </div>
 
     <div class="grid">
@@ -137,96 +133,10 @@
     </div>
 
     <div class="top" style="padding:12px 18px;">
-      <div class="fine">Designed by Lim Kim Sze © 2026 • Original SVG art (no textbook / brand assets).</div>
+      <div class="fine">Designed by Lim Kim Sze © 2026.</div>
     </div>
   </div>
-
-  <script>
-  (function(){
-    const STREAK_KEY = "KS-speedstreak::SavingsQuest";
-    function paint(){
-      const v = Number(localStorage.getItem(STREAK_KEY) || "0");
-      const el = document.getElementById("streakVal");
-      if(el) el.textContent = String(v);
-    }
-    window.addEventListener("focus", paint);
-    window.addEventListener("pageshow", paint);
-    paint();
-  })();
-  </script>
-
-  <!-- ✅ One-time welcome track (no loop) -->
-  <audio id="bgm" src="https://limkimsze-maker.github.io/bgmusic/bgmusic.mp3" preload="none"></audio>
-
-  <script>
-  (function(){
-    // Keep your existing toggle UI, but music only plays ONCE per website entry.
-    // If user turns it off, we will not play at all.
-    const BGM_KEY = "SQ-bgm-on";
-    const PLAYONCE_KEY = "SQ-bgm-played-once";
-    const btn = document.getElementById("bgmBtn");
-    const bgm = document.getElementById("bgm");
-    if(!btn || !bgm) return;
-
-    let on = true;
-    try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
-
-    function paint(){
-      btn.textContent = on ? "🎵 Music: On" : "🔇 Music: Off";
-      btn.style.opacity = on ? "1" : ".75";
-    }
-
-    function setOn(v){
-      on = !!v;
-      try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
-      paint();
-      if(!on){ try{ bgm.pause(); }catch(e){} }
-    }
-
-    // Toggle
-    btn.addEventListener("click", ()=> setOn(!on));
-    btn.addEventListener("keydown", (e)=>{
-      if(e.key==="Enter" || e.key===" "){
-        e.preventDefault();
-        setOn(!on);
-      }
-    });
-
-    // Try to play once. Most browsers require a gesture, so we start on first pointerdown.
-    function playOnce(){
-      if(!on) return;
-
-      // Play only once per "website entry" (session/tab).
-      // Use sessionStorage so it resets when the user closes the tab/browser.
-      try{
-        if(sessionStorage.getItem(PLAYONCE_KEY) === "2") return;
-        sessionStorage.setItem(PLAYONCE_KEY, "2");
-      }catch(e){}
-
-      bgm.currentTime = 0;
-      bgm.volume = 0.22;
-
-      try{
-        const p = bgm.play();
-        if(p && p.catch) p.catch(()=>{});
-      }catch(e){}
-    }
-
-    // One-time start on first interaction
-    window.addEventListener("pointerdown", playOnce, { once:true, passive:true });
-
-    // Keep UI in sync if another page changes it
-    window.addEventListener("storage", (e)=>{
-      if(e.key===BGM_KEY){
-        on = (e.newValue !== "0");
-        paint();
-        if(!on){ try{ bgm.pause(); }catch(e2){} }
-      }
-    }, { passive:true });
-
-    paint();
-  })();
-  </script>
+ 
 
 </body>
 </html>
