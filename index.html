@@ -20,24 +20,12 @@
     .top{background:rgba(255,255,255,.78); border:1px solid rgba(15,23,42,.10); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow);}
     h1{margin:0; font-size:22px; letter-spacing:-.02em}
     .sub{margin-top:6px; color:var(--muted); font-weight:800}
-
-    /* ✅ you used .meta in HTML but didn’t define it */
-    .meta{
-      margin-top:8px;
-      font-weight:1000;
-      color:rgba(15,23,42,.85);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
     .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
     @media (max-width:860px){.grid{grid-template-columns:1fr}}
     .card{background:rgba(255,255,255,.92); border:1px solid rgba(15,23,42,.10); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;}
     .title{font-weight:1000}
     .tag{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; border:1px solid rgba(15,23,42,.12); background:#fff; font-weight:1000; width:max-content;}
-    .btn{margin-top:auto; width:100%; padding:12px 12px; border-radius:14px; border:0; cursor:pointer; font-weight:1000; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 10px 22px rgba(14,165,233,.24); display:inline-block; text-align:center;}
+    .btn{margin-top:auto; width:100%; padding:12px 12px; border-radius:14px; border:0; cursor:pointer; font-weight:1000; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 10px 22px rgba(14,165,233,.24);}
     .btn:active{transform:translateY(1px)}
     .fine{font-size:12px; color:var(--muted); font-weight:800}
     .svgbox{display:flex; justify-content:center; background:linear-gradient(180deg, rgba(14,165,233,.06), rgba(139,92,246,.05)); border:1px solid rgba(15,23,42,.08); border-radius:18px; padding:10px;}
@@ -48,10 +36,10 @@
   <div class="wrap">
     <div class="top">
       <h1>Savings Quest</h1>
-      <div class="meta">🔥 Streak (shared): <span id="streakVal">0</span></div>
+        <div class="meta">🔥 Streak (shared): <span id="streakVal">0</span></div>
       <div class="meta" id="bgmBtn" role="button" tabindex="0" style="cursor:pointer">🎵 Music: On</div>
       <div class="sub">Pick an item to buy. Beat the target time to build a <b>Speed Streak</b> and try again to build your streak.</div>
-      <div class="fine">Music by Cyberwave Orchestra via Pixabay</div>
+          <div class="fine">Music by Cyberwave Orchestra via Pixabay</div>
     </div>
 
     <div class="grid">
@@ -78,7 +66,7 @@
   </g>
 </svg></div>
         <div class="fine">Count in cents to reach 100¢.</div>
-        <a class="btn" href="https://limkimsze-maker.github.io/P3_Make_1_dollar/">Play $1 Level</a>
+        <a class="btn" href="./Making1dollar_game.html">Play $1 Level</a>
       </div>
 
       <div class="card">
@@ -142,36 +130,29 @@
     </div>
   </div>
 
-  <script>
-  (function(){
-    const STREAK_KEY = "KS-speedstreak::SavingsQuest";
-    function paint(){
-      const v = Number(localStorage.getItem(STREAK_KEY) || "0");
-      const el = document.getElementById("streakVal");
-      if(el) el.textContent = String(v);
-    }
-    window.addEventListener("focus", paint);
-    window.addEventListener("pageshow", paint);
-    paint();
-  })();
-  </script>
+<script>
+(function(){
+  const STREAK_KEY = "KS-speedstreak::SavingsQuest";
+  function paint(){
+    const v = Number(localStorage.getItem(STREAK_KEY) || "0");
+    const el = document.getElementById("streakVal");
+    if(el) el.textContent = String(v);
+  }
+  window.addEventListener("focus", paint);
+  window.addEventListener("pageshow", paint);
+  paint();
+})();
+</script>
 
-  <!-- ✅ audio element id is "bgm" -->
+  <audio id="bgm" src="/bgmusic/bgmusic.mp3" loop preload="auto"></audio>
+
+
 <script>
 (function(){
   const BGM_KEY = "SQ-bgm-on";
   const btn = document.getElementById("bgmBtn");
-  const bgm = document.getElementById("bgm");
+  const bgm = document.getElementById("bgmAudio");
   if(!btn || !bgm) return;
-
-  // Show quick status (helps you catch 404 / blocked autoplay instantly)
-  const status = document.createElement("div");
-  status.style.marginTop = "6px";
-  status.style.fontSize = "12px";
-  status.style.fontWeight = "800";
-  status.style.color = "rgba(100,116,139,.95)";
-  status.id = "bgmStatus";
-  btn.insertAdjacentElement("afterend", status);
 
   let on = true;
   try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
@@ -181,54 +162,22 @@
     btn.style.opacity = on ? "1" : ".75";
   }
 
-  function setStatus(t){ status.textContent = t; }
-
-  bgm.addEventListener("canplay", ()=> setStatus("Music ready ✅"));
-  bgm.addEventListener("playing", ()=> setStatus("Playing 🎶"));
-  bgm.addEventListener("pause", ()=> setStatus(on ? "Paused (click once to start)" : "Off"));
-  bgm.addEventListener("error", ()=>{
-    // If this shows, it’s almost always filename/path/case
-    setStatus("❌ Cannot load bgmusic.mp3 (check folder + case)");
-    // console.log("Audio src:", bgm.currentSrc || bgm.src);
-  });
-
-  async function tryPlay(fromGesture){
+  function applyPlayState(){
     paint();
-    if(!on){
-      try{ bgm.pause(); }catch(e){}
-      setStatus("Off");
-      return;
-    }
-
-    // Gentle volume
+    if(!on){ try{ bgm.pause(); }catch(e){} return; }
     bgm.volume = 0.22;
-
-    // Autoplay trick: attempt muted autoplay first (often allowed),
-    // then unmute on the user gesture.
     try{
-      if(!fromGesture){
-        bgm.muted = true;
-        await bgm.play();
-        setStatus("Muted autoplay started (tap once to hear)");
-        return;
-      }
-      // On real user gesture:
-      bgm.muted = false;
-      await bgm.play();
-    }catch(e){
-      // Still blocked or file missing
-      setStatus("⚠️ Tap anywhere to start music (or file not found)");
-    }
+      const p = bgm.play();
+      if(p && p.catch) p.catch(()=>{});
+    }catch(e){}
   }
 
   function setOn(v){
     on = !!v;
     try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
-    // If turning ON, we still need a gesture to hear it
-    tryPlay(false);
+    applyPlayState();
   }
 
-  // Toggle button
   btn.addEventListener("click", ()=> setOn(!on));
   btn.addEventListener("keydown", (e)=>{
     if(e.key==="Enter" || e.key===" "){
@@ -236,83 +185,17 @@
       setOn(!on);
     }
   });
-
-  // First user gesture (guaranteed attempt to play with sound)
-  function onFirstGesture(){
-    tryPlay(true);
-    window.removeEventListener("pointerdown", onFirstGesture, true);
-    window.removeEventListener("keydown", onFirstGesture, true);
-  }
-  window.addEventListener("pointerdown", onFirstGesture, true);
-  window.addEventListener("keydown", onFirstGesture, true);
-
-  // Sync across pages/tabs
+  window.addEventListener("pointerdown", ()=> applyPlayState(), { once:true, passive:true });
   window.addEventListener("storage", (e)=>{
     if(e.key===BGM_KEY){
       on = (e.newValue !== "0");
-      tryPlay(false);
+      applyPlayState();
     }
   }, { passive:true });
 
-  // Kick off
-  tryPlay(false);
+  applyPlayState();
 })();
 </script>
-
-
-  <script>
-  (function(){
-    const BGM_KEY = "SQ-bgm-on";
-    const btn = document.getElementById("bgmBtn");
-    const bgm = document.getElementById("bgm"); // ✅ FIXED
-    if(!btn || !bgm) return;
-
-    let on = true;
-    try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
-
-    function paint(){
-      btn.textContent = on ? "🎵 Music: On" : "🔇 Music: Off";
-      btn.style.opacity = on ? "1" : ".75";
-    }
-
-    function applyPlayState(){
-      paint();
-      if(!on){ try{ bgm.pause(); }catch(e){} return; }
-      bgm.volume = 0.22;
-      try{
-        const p = bgm.play();
-        if(p && p.catch) p.catch(()=>{});
-      }catch(e){}
-    }
-
-    function setOn(v){
-      on = !!v;
-      try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
-      applyPlayState();
-    }
-
-    btn.addEventListener("click", ()=> setOn(!on));
-    btn.addEventListener("keydown", (e)=>{
-      if(e.key==="Enter" || e.key===" "){
-        e.preventDefault();
-        setOn(!on);
-      }
-    });
-
-    // ✅ first user gesture unlock
-    window.addEventListener("pointerdown", ()=> applyPlayState(), { once:true, passive:true });
-
-    // ✅ sync across tabs/pages
-    window.addEventListener("storage", (e)=>{
-      if(e.key===BGM_KEY){
-        on = (e.newValue !== "0");
-        applyPlayState();
-      }
-    }, { passive:true });
-
-    applyPlayState();
-  })();
-  </script>
 
 </body>
 </html>
