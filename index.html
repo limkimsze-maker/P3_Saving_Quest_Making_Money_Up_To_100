@@ -199,8 +199,8 @@
       // Play only once per "website entry" (session/tab).
       // Use sessionStorage so it resets when the user closes the tab/browser.
       try{
-        if(sessionStorage.getItem(PLAYONCE_KEY) === "1") return;
-        sessionStorage.setItem(PLAYONCE_KEY, "1");
+        if(sessionStorage.getItem(PLAYONCE_KEY) === "2") return;
+        sessionStorage.setItem(PLAYONCE_KEY, "2");
       }catch(e){}
 
       bgm.currentTime = 0;
