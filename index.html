@@ -20,12 +20,24 @@
     .top{background:rgba(255,255,255,.78); border:1px solid rgba(15,23,42,.10); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow);}
     h1{margin:0; font-size:22px; letter-spacing:-.02em}
     .sub{margin-top:6px; color:var(--muted); font-weight:800}
+
+    /* ✅ you used .meta in HTML but didn’t define it */
+    .meta{
+      margin-top:8px;
+      font-weight:1000;
+      color:rgba(15,23,42,.85);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
     .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
     @media (max-width:860px){.grid{grid-template-columns:1fr}}
     .card{background:rgba(255,255,255,.92); border:1px solid rgba(15,23,42,.10); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;}
     .title{font-weight:1000}
     .tag{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; border:1px solid rgba(15,23,42,.12); background:#fff; font-weight:1000; width:max-content;}
-    .btn{margin-top:auto; width:100%; padding:12px 12px; border-radius:14px; border:0; cursor:pointer; font-weight:1000; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 10px 22px rgba(14,165,233,.24);}
+    .btn{margin-top:auto; width:100%; padding:12px 12px; border-radius:14px; border:0; cursor:pointer; font-weight:1000; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 10px 22px rgba(14,165,233,.24); display:inline-block; text-align:center;}
     .btn:active{transform:translateY(1px)}
     .fine{font-size:12px; color:var(--muted); font-weight:800}
     .svgbox{display:flex; justify-content:center; background:linear-gradient(180deg, rgba(14,165,233,.06), rgba(139,92,246,.05)); border:1px solid rgba(15,23,42,.08); border-radius:18px; padding:10px;}
@@ -36,10 +48,10 @@
   <div class="wrap">
     <div class="top">
       <h1>Savings Quest</h1>
-        <div class="meta">🔥 Streak (shared): <span id="streakVal">0</span></div>
+      <div class="meta">🔥 Streak (shared): <span id="streakVal">0</span></div>
       <div class="meta" id="bgmBtn" role="button" tabindex="0" style="cursor:pointer">🎵 Music: On</div>
       <div class="sub">Pick an item to buy. Beat the target time to build a <b>Speed Streak</b> and try again to build your streak.</div>
-          <div class="fine">Music by Cyberwave Orchestra via Pixabay</div>
+      <div class="fine">Music by Cyberwave Orchestra via Pixabay</div>
     </div>
 
     <div class="grid">
@@ -130,71 +142,76 @@
     </div>
   </div>
 
-<script>
-(function(){
-  const STREAK_KEY = "KS-speedstreak::SavingsQuest";
-  function paint(){
-    const v = Number(localStorage.getItem(STREAK_KEY) || "0");
-    const el = document.getElementById("streakVal");
-    if(el) el.textContent = String(v);
-  }
-  window.addEventListener("focus", paint);
-  window.addEventListener("pageshow", paint);
-  paint();
-})();
-</script>
+  <script>
+  (function(){
+    const STREAK_KEY = "KS-speedstreak::SavingsQuest";
+    function paint(){
+      const v = Number(localStorage.getItem(STREAK_KEY) || "0");
+      const el = document.getElementById("streakVal");
+      if(el) el.textContent = String(v);
+    }
+    window.addEventListener("focus", paint);
+    window.addEventListener("pageshow", paint);
+    paint();
+  })();
+  </script>
 
+  <!-- ✅ audio element id is "bgm" -->
   <audio id="bgm" src="./bgmusic.mp3" loop preload="auto"></audio>
 
-<script>
-(function(){
-  const BGM_KEY = "SQ-bgm-on";
-  const btn = document.getElementById("bgmBtn");
-  const bgm = document.getElementById("bgmAudio");
-  if(!btn || !bgm) return;
+  <script>
+  (function(){
+    const BGM_KEY = "SQ-bgm-on";
+    const btn = document.getElementById("bgmBtn");
+    const bgm = document.getElementById("bgm"); // ✅ FIXED
+    if(!btn || !bgm) return;
 
-  let on = true;
-  try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
+    let on = true;
+    try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
 
-  function paint(){
-    btn.textContent = on ? "🎵 Music: On" : "🔇 Music: Off";
-    btn.style.opacity = on ? "1" : ".75";
-  }
-
-  function applyPlayState(){
-    paint();
-    if(!on){ try{ bgm.pause(); }catch(e){} return; }
-    bgm.volume = 0.22;
-    try{
-      const p = bgm.play();
-      if(p && p.catch) p.catch(()=>{});
-    }catch(e){}
-  }
-
-  function setOn(v){
-    on = !!v;
-    try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
-    applyPlayState();
-  }
-
-  btn.addEventListener("click", ()=> setOn(!on));
-  btn.addEventListener("keydown", (e)=>{
-    if(e.key==="Enter" || e.key===" "){
-      e.preventDefault();
-      setOn(!on);
+    function paint(){
+      btn.textContent = on ? "🎵 Music: On" : "🔇 Music: Off";
+      btn.style.opacity = on ? "1" : ".75";
     }
-  });
-  window.addEventListener("pointerdown", ()=> applyPlayState(), { once:true, passive:true });
-  window.addEventListener("storage", (e)=>{
-    if(e.key===BGM_KEY){
-      on = (e.newValue !== "0");
+
+    function applyPlayState(){
+      paint();
+      if(!on){ try{ bgm.pause(); }catch(e){} return; }
+      bgm.volume = 0.22;
+      try{
+        const p = bgm.play();
+        if(p && p.catch) p.catch(()=>{});
+      }catch(e){}
+    }
+
+    function setOn(v){
+      on = !!v;
+      try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
       applyPlayState();
     }
-  }, { passive:true });
 
-  applyPlayState();
-})();
-</script>
+    btn.addEventListener("click", ()=> setOn(!on));
+    btn.addEventListener("keydown", (e)=>{
+      if(e.key==="Enter" || e.key===" "){
+        e.preventDefault();
+        setOn(!on);
+      }
+    });
+
+    // ✅ first user gesture unlock
+    window.addEventListener("pointerdown", ()=> applyPlayState(), { once:true, passive:true });
+
+    // ✅ sync across tabs/pages
+    window.addEventListener("storage", (e)=>{
+      if(e.key===BGM_KEY){
+        on = (e.newValue !== "0");
+        applyPlayState();
+      }
+    }, { passive:true });
+
+    applyPlayState();
+  })();
+  </script>
 
 </body>
 </html>
