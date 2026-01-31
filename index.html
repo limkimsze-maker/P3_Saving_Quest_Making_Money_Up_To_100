@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Savings Quest — Choose Your Item</title>
+  <style>
+    :root{
+      --bg1:#f6fbff; --bg2:#fff7ed; --card:#fff; --ink:#0f172a; --muted:#64748b;
+      --line:#e2e8f0; --good:#16a34a; --accent:#0ea5e9; --accent2:#a855f7;
+      --shadow:0 14px 34px rgba(2,6,23,.10); --radius:22px;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font);color:var(--ink);background:
+      radial-gradient(1200px 600px at 20% 0%, rgba(14,165,233,.16), transparent 55%),
+      radial-gradient(1000px 600px at 90% 10%, rgba(168,85,247,.14), transparent 55%),
+      linear-gradient(180deg,var(--bg1),var(--bg2)); min-height:100vh; display:flex; justify-content:center; padding:18px;}
+    .wrap{width:min(980px,100%); display:flex; flex-direction:column; gap:14px;}
+    .top{background:rgba(255,255,255,.78); border:1px solid rgba(15,23,42,.10); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow);}
+    h1{margin:0; font-size:22px; letter-spacing:-.02em}
+    .sub{margin-top:6px; color:var(--muted); font-weight:800}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+    @media (max-width:860px){.grid{grid-template-columns:1fr}}
+    .card{background:rgba(255,255,255,.92); border:1px solid rgba(15,23,42,.10); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px;}
+    .title{font-weight:1000}
+    .tag{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; border:1px solid rgba(15,23,42,.12); background:#fff; font-weight:1000; width:max-content;}
+    .btn{margin-top:auto; width:100%; padding:12px 12px; border-radius:14px; border:0; cursor:pointer; font-weight:1000; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:0 10px 22px rgba(14,165,233,.24);}
+    .btn:active{transform:translateY(1px)}
+    .fine{font-size:12px; color:var(--muted); font-weight:800}
+    .svgbox{display:flex; justify-content:center; background:linear-gradient(180deg, rgba(14,165,233,.06), rgba(139,92,246,.05)); border:1px solid rgba(15,23,42,.08); border-radius:18px; padding:10px;}
+    a{color:inherit; text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>Savings Quest</h1>
+        <div class="meta">🔥 Streak (shared): <span id="streakVal">0</span></div>
+      <div class="meta" id="bgmBtn" role="button" tabindex="0" style="cursor:pointer">🎵 Music: On</div>
+      <div class="sub">Pick an item to buy. Beat the target time to build a <b>Speed Streak</b> and try again to build your streak.</div>
+          <div class="fine">Music by Cyberwave Orchestra via Pixabay</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="title">Pen</div>
+        <div class="tag">💰 Price: $1</div>
+        <div class="svgbox"><svg viewBox="0 0 220 120" width="220" height="120" aria-hidden="true">
+  <defs>
+    <linearGradient id="gPen" x1="0" x2="1">
+      <stop offset="0" stop-color="rgba(14,165,233,.95)"/><stop offset="1" stop-color="rgba(139,92,246,.95)"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="22" width="196" height="76" rx="18" fill="rgba(255,255,255,.65)" stroke="rgba(15,23,42,.14)" stroke-width="3"/>
+  <g transform="translate(32 36) rotate(-10 70 20)">
+    <rect x="10" y="18" width="140" height="18" rx="9" fill="url(#gPen)"/>
+    <rect x="142" y="18" width="20" height="18" rx="9" fill="rgba(2,6,23,.18)"/>
+    <polygon points="162,18 188,27 162,36" fill="rgba(245,158,11,.95)"/>
+    <circle cx="26" cy="27" r="6" fill="rgba(255,255,255,.75)"/>
+  </g>
+  <g transform="translate(142 14)">
+    <path d="M36 2h40v24c0 18-16 32-40 32S-4 44-4 26V2h40z" fill="rgba(34,197,94,.15)" stroke="rgba(22,163,74,.35)" stroke-width="3"/>
+    <text x="36" y="26" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(15,23,42,.9)">$1</text>
+    <text x="36" y="46" text-anchor="middle" font-size="11" font-weight="900" fill="rgba(100,116,139,.95)">PEN</text>
+  </g>
+</svg></div>
+        <div class="fine">Count in cents to reach 100¢.</div>
+        <a class="btn" href="./Making1dollar_game.html">Play $1 Level</a>
+      </div>
+
+      <div class="card">
+        <div class="title">Pencil case</div>
+        <div class="tag">💰 Price: $10</div>
+        <div class="svgbox"><svg viewBox="0 0 220 120" width="220" height="120" aria-hidden="true">
+  <defs>
+    <linearGradient id="gCase" x1="0" x2="1">
+      <stop offset="0" stop-color="rgba(245,158,11,.95)"/><stop offset="1" stop-color="rgba(139,92,246,.90)"/>
+    </linearGradient>
+  </defs>
+  <rect x="14" y="20" width="192" height="80" rx="20" fill="rgba(255,255,255,.65)" stroke="rgba(15,23,42,.14)" stroke-width="3"/>
+  <g transform="translate(30 30)">
+    <rect x="0" y="18" width="150" height="56" rx="16" fill="url(#gCase)" stroke="rgba(15,23,42,.14)" stroke-width="3"/>
+    <rect x="0" y="18" width="150" height="16" rx="16" fill="rgba(255,255,255,.25)"/>
+    <path d="M18 18v56" stroke="rgba(255,255,255,.55)" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="18" cy="46" r="6" fill="rgba(255,255,255,.85)"/>
+    <path d="M26 46h110" stroke="rgba(255,255,255,.55)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(144 10)">
+    <path d="M36 2h40v24c0 18-16 32-40 32S-4 44-4 26V2h40z" fill="rgba(14,165,233,.14)" stroke="rgba(14,165,233,.30)" stroke-width="3"/>
+    <text x="36" y="26" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(15,23,42,.9)">$10</text>
+    <text x="36" y="46" text-anchor="middle" font-size="10.5" font-weight="900" fill="rgba(100,116,139,.95)">CASE</text>
+  </g>
+</svg></div>
+        <div class="fine">Make $1 first, then count on to $10.</div>
+        <a class="btn" href="./Making10dollar_game.html">Play $10 Level</a>
+      </div>
+
+      <div class="card">
+        <div class="title">Basketball shoes</div>
+        <div class="tag">💰 Price: $100</div>
+        <div class="svgbox"><svg viewBox="0 0 240 130" width="240" height="130" aria-hidden="true">
+  <defs>
+    <linearGradient id="gShoe" x1="0" x2="1">
+      <stop offset="0" stop-color="rgba(14,165,233,.92)"/><stop offset="1" stop-color="rgba(239,68,68,.86)"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="22" width="208" height="86" rx="20" fill="rgba(255,255,255,.65)" stroke="rgba(15,23,42,.14)" stroke-width="3"/>
+  <g transform="translate(28 40)">
+    <path d="M22 40c34-2 60-24 78-24 16 0 24 10 44 18 16 6 38 4 54 10 10 4 14 10 14 16 0 10-10 18-26 18H32c-14 0-24-8-24-20 0-10 6-16 14-18z" fill="url(#gShoe)" stroke="rgba(15,23,42,.14)" stroke-width="3"/>
+    <path d="M34 52h110" stroke="rgba(255,255,255,.6)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M44 44h62" stroke="rgba(255,255,255,.6)" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="122" cy="50" r="4" fill="rgba(255,255,255,.75)"/>
+    <circle cx="136" cy="54" r="4" fill="rgba(255,255,255,.75)"/>
+    <path d="M22 66h168" stroke="rgba(2,6,23,.18)" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(166 10)">
+    <path d="M36 2h44v26c0 20-18 36-44 36S-8 48-8 28V2h44z" fill="rgba(34,197,94,.14)" stroke="rgba(22,163,74,.32)" stroke-width="3"/>
+    <text x="36" y="28" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(15,23,42,.9)">$100</text>
+    <text x="36" y="50" text-anchor="middle" font-size="9.5" font-weight="900" fill="rgba(100,116,139,.95)">SHOES</text>
+  </g>
+</svg></div>
+        <div class="fine">Next $1 → next $10 → $100.</div>
+        <a class="btn" href="./Making100dollars_game.html">Play $100 Level</a>
+      </div>
+    </div>
+
+    <div class="top" style="padding:12px 18px;">
+      <div class="fine">Designed by Lim Kim Sze © 2026 • Original SVG art (no textbook / brand assets).</div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const STREAK_KEY = "KS-speedstreak::SavingsQuest";
+  function paint(){
+    const v = Number(localStorage.getItem(STREAK_KEY) || "0");
+    const el = document.getElementById("streakVal");
+    if(el) el.textContent = String(v);
+  }
+  window.addEventListener("focus", paint);
+  window.addEventListener("pageshow", paint);
+  paint();
+})();
+</script>
+
+  <audio id="bgmAudio" loop preload="auto" src="./puzzle-game-bright-casual-video-game-music-249202.mp3"></audio>
+
+<script>
+(function(){
+  const BGM_KEY = "SQ-bgm-on";
+  const btn = document.getElementById("bgmBtn");
+  const bgm = document.getElementById("bgmAudio");
+  if(!btn || !bgm) return;
+
+  let on = true;
+  try{ on = (localStorage.getItem(BGM_KEY) !== "0"); }catch(e){}
+
+  function paint(){
+    btn.textContent = on ? "🎵 Music: On" : "🔇 Music: Off";
+    btn.style.opacity = on ? "1" : ".75";
+  }
+
+  function applyPlayState(){
+    paint();
+    if(!on){ try{ bgm.pause(); }catch(e){} return; }
+    bgm.volume = 0.22;
+    try{
+      const p = bgm.play();
+      if(p && p.catch) p.catch(()=>{});
+    }catch(e){}
+  }
+
+  function setOn(v){
+    on = !!v;
+    try{ localStorage.setItem(BGM_KEY, on ? "1" : "0"); }catch(e){}
+    applyPlayState();
+  }
+
+  btn.addEventListener("click", ()=> setOn(!on));
+  btn.addEventListener("keydown", (e)=>{
+    if(e.key==="Enter" || e.key===" "){
+      e.preventDefault();
+      setOn(!on);
+    }
+  });
+  window.addEventListener("pointerdown", ()=> applyPlayState(), { once:true, passive:true });
+  window.addEventListener("storage", (e)=>{
+    if(e.key===BGM_KEY){
+      on = (e.newValue !== "0");
+      applyPlayState();
+    }
+  }, { passive:true });
+
+  applyPlayState();
+})();
+</script>
+
+</body>
+</html>
